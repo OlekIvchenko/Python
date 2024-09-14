@@ -123,7 +123,23 @@
 #
 #
 # Запросіть тризначне ціле число і виведіть "True", якщо сума його цифр є простим числом, в іншому випадку виведіть "False".
-t
+
+user_input = input('Input number: ')
+if user_input.isdigit() and len(user_input) == 3 and user_input[0] != '0':
+    summa = 0
+    count = 0
+    for i in user_input:
+        summa += int(i)
+
+    for i in range(1, summa + 1):
+        if summa % i == 0:
+            count += 1
+    if count == 2:
+        print(True)
+    else:
+        print(False)
+else:
+    print('Error')
 
 # 10 -> 1, 2, ... 10
 
