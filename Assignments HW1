@@ -1,0 +1,70 @@
+###### Завдання 1. Запросіть у користувача ім'я та місячну зарплату в доларах та виведіть їхню річну зарплату в тисячах доларів.
+# name = input("Enter your name: ")
+# monthly_salary = float(input("Enter your monthly salary in dollars: "))
+# annual_salary_thousands = int(monthly_salary * 12 / 1000)
+# print(f"{name}'s annual salary is ${annual_salary_thousands}K")
+# print(f"Річна зарплата {name} складає {annual_salary_thousands} тис. доларів")
+
+###### Завдання 2. Запросіть ціле число і виведіть True, якщо це парне число діапазоні від 100 до 999, інакше - «False».
+# user_input = input("Enter an integer: ")
+# if user_input.isdigit():
+#     number = int(user_input)
+#     is_even = number % 2 == 0
+#     is_in_range = 100 <= number <= 999
+#     print(is_even and is_in_range)
+# else:
+#     print("False")
+
+###### Завдання 3. Як вхідні дані візьмемо ціле число; Це число від 101 до 999, а його остання цифра не дорівнює нулю. Виведіть число, що складається з чисел першого у зворотньому порядку.
+###### Option 1
+# number_input = input("Enter an integer between 101 and 999, the last digit of which is not zero: ")
+# if number_input.isdigit():
+#     number = int(number_input)
+#     if 101 <= number <= 999 and number % 10 != 0:
+#         reversed_number = int(number_input[::-1])
+#         print(reversed_number)
+#     else:
+#         print("Incorrect data")
+# else:
+#     print("Invalid input format")
+
+###### Option 2
+# import random
+# def reverse_number(num):
+#     return int(str(num)[::-1])
+# while True:
+#     random_number = random.randint(101, 999)
+#     if random_number % 10 != 0:
+#         break
+# print(f"Random number: {random_number}")
+# print(f"Inverse random number: {reverse_number(random_number)}")
+
+###### Завдання 4. Запитайте два цілих числа та виведіть: a. Їхню суму; b. Їхня різниця; c. результат множення; d. Результат поділу першого на друге; e. Залишок від поділу першого на друге; f. True, якщо перше число більше або дорівнює другому, інакше False
+# def is_valid_integer(value):
+#     return value.isdigit() or (value[0] == '-' and value[1:].isdigit())
+# while True:
+#     num1 = input("Enter the first integer: ")
+#     if is_valid_integer(num1):
+#         num1 = int(num1)
+#         break
+#     else:
+#         print("Invalid input. Please enter an integer.")
+# while True:
+#     num2 = input("Enter the second integer: ")
+#     if is_valid_integer(num2):
+#         num2 = int(num2)
+#         break
+#     else:
+#         print("Invalid input. Please enter an integer.")
+# print(f"a. Sum: {num1 + num2}")
+# print(f"b. Difference: {num1 - num2}")
+# print(f"c. Multiplication: {num1 * num2}")
+# if num2 != 0:
+#     print(f"d. The quotient of dividing the first by the second: {num1 / num2}")
+#     print(f"e. The remainder of dividing the first by the second: {num1 % num2}")
+# else:
+#     print("d. Division by zero is not possible")
+#     print("e. Calculating the remainder of division by zero is not possible")
+# print(f"f. The first number is greater than or equal to the second: {num1 >= num2}")
+
+### Thank you!
