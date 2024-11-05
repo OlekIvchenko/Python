@@ -1,1 +1,155 @@
+# 1. Як вхідні дані запитайте ціле число. Якщо воно ділиться на 3, виведіть "foo"; якщо воно ділиться на 5, виведіть "bar"; якщо воно ділиться на обидва, виведіть "ham" (а не "foo" або "bar").
 
+def check_division(number):
+    if number % 3 == 0 and number % 5 == 0:
+        return "ham"
+    elif number % 3 == 0:
+        return "foo"
+    elif number % 5 == 0:
+        return "bar"
+    else:
+        return "не ділиться ні на 3, ні на 5"
+
+while True:
+    user_input = input('Введіть ціле число: ')
+
+    if user_input.lstrip('-').isdigit():
+        number = int(user_input)
+        result = check_division(number)
+        print(result)
+        break
+    else:
+        print("Помилка. Будь ласка, введіть коректне ціле число.")
+
+
+# 2. Як вхідні дані запитайте два числа та виведіть яке з них менше і яке більше
+# Варіант 1
+def compare_numbers(a, b):
+    if a > b:
+        return f"Перше число {a} більше за друге число {b}"
+    elif a < b:
+        return f"Перше число {a} менше за друге число {b}"
+    else:
+        return f"Числа рівні: {a} = {b}"
+while True:
+    try:
+        num1 = input('Введіть перше число: ')
+        num2 = input('Введіть друге число: ')
+        if num1.lstrip('-').isdigit() and num2.lstrip('-').isdigit():
+            num1, num2 = int(num1), int(num2)
+            print(compare_numbers(num1, num2))
+            break
+        else:
+            print("Помилка! Будь ласка, введіть коректні цілі числа.")
+    except ValueError:
+        print("Помилка! Будь ласка, введіть коректні цілі числа.")
+
+# Варіант 2
+import random
+def compare_random_numbers():
+    numbers = [random.randint(100, 1000) for _ in range(2)]
+    print(f"Згенеровані числа: {numbers[0]} та {numbers[1]}")
+    if numbers[0] != numbers[1]:
+        print(f"{max(numbers)} > {min(numbers)}")
+    else:
+        print(f"Числа рівні: {numbers[0]} = {numbers[1]}")
+print("\nВаріант 2:")
+compare_random_numbers()
+
+
+# 3. Як вхідні дані запитайте три числа і виведіть найменше, середнє та найбільше. Припустимо, всі вони різні
+import random
+
+def find_middle_basic(a, b, c):
+    return a + b + c - max(a, b, c) - min(a, b, c)
+
+def input_with_validation():
+    numbers = []
+    for i in range(3):
+        while True:
+            num = input(f'Введіть {i+1}-е число: ')
+            if num.lstrip('-').isdigit():
+                numbers.append(int(num))
+                break
+            print("Помилка! Введіть коректне ціле число.")
+    return numbers
+
+def print_results(numbers, method=""):
+    print(f"\n{method}")
+    print(f"Найменше число: {min(numbers)}")
+    print(f"Середнє число: {sorted(numbers)[1]}")
+    print(f"Найбільше число: {max(numbers)}")
+
+# Метод 1
+def method1():
+    print("\n=== Метод 1: Базовий підхід з перевіркою введення ===")
+    numbers = input_with_validation()
+    minimum = min(numbers)
+    maximum = max(numbers)
+    middle = find_middle_basic(*numbers)
+    print_results(numbers, "Результат базового підходу:")
+
+# Метод 2
+def method2():
+    print("\n=== Метод 2: Використання списку та сортування ===")
+    numbers = input_with_validation()
+    sorted_numbers = sorted(numbers)
+    print_results(numbers, "Результат сортування:")
+
+# Метод 3
+def method3():
+    print("\n=== Метод 3: Використання випадкових чисел ===")
+    numbers = [random.randint(100, 1000) for _ in range(3)]
+    print(f"Згенеровані числа: {numbers}")
+    print_results(numbers, "Результат для випадкових чисел:")
+
+def run_all_methods():
+    methods = [method1, method2, method3]
+    for method in methods:
+        try:
+            method()
+        except Exception as e:
+            print(f"Помилка при виконанні {method.__name__}: {e}")
+        print("-" * 50)
+
+if __name__ == "__main__":
+    run_all_methods()
+
+# 4. Зіграйте у гру Fizz-Buzz: виведіть усі числа від 1 до 100; якщо число ділиться на 3, замість числа виведіть "fizz". Якщо воно ділиться на 5, замість числа виведіть "Buzz". Якщо воно ділиться на обидва, виведіть "fizz buzz" замість числа.
+def play_fizz_buzz(start=1, end=100, fizz_num=3, buzz_num=5):
+    results = []
+    for num in range(start, end + 1):
+        if num % fizz_num == 0 and num % buzz_num == 0:
+            results.append("fizz buzz")
+        elif num % fizz_num == 0:
+            results.append("fizz")
+        elif num % buzz_num == 0:
+            results.append("buzz")
+        else:
+            results.append(str(num))
+
+    numbers_per_line = 10
+    for i in range(0, len(results), numbers_per_line):
+        line = results[i:i + numbers_per_line]
+        formatted_line = [f"{item:^9}" for item in line]
+        print(" ".join(formatted_line))
+
+print("=== Гра Fizz-Buzz ===\n")
+play_fizz_buzz()
+
+# 5. Зіграйте у гру 7-boom: виведіть усі числа від 1 до 100; якщо число ділиться на 7 або містить цифру 7, виведіть "BOOM" замість числа.
+def play_seven_boom(start=1, end=100, boom_number=7):
+    results = []
+
+    for num in range(start, end + 1):
+        if num % boom_number == 0 or str(boom_number) in str(num):
+            results.append("BOOM")
+        else:
+            results.append(str(num))
+
+    numbers_per_line = 10
+    for i in range(0, len(results), numbers_per_line):
+        line = results[i:i + numbers_per_line]
+        formatted_line = [f"{item:^6}" for item in line]
+        print(" ".join(formatted_line))
+play_seven_boom()
