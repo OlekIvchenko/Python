@@ -1,1 +1,57 @@
+import random
 
+def get_valid_input(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            if value <= 0:
+                raise ValueError("Введіть позитивне ціле число.")
+            return value
+        except ValueError as e:
+            print(f"Помилка: {e}")
+
+def generate_student_scores(num_students):
+    return [(random.randint(50, 100), random.choice([True, False]))
+            for _ in range(num_students)]
+
+def print_student_results(student_scores):
+    print("\nРезультати студентів:")
+    for i, (score, passed) in enumerate(student_scores, 1):
+        result = "Passed" if passed else "Failed"
+        print(f"Student {i}: {score}, {result}")
+
+def check_professor_consistency(student_scores):
+    passing_scores = [score for score, result in student_scores if result]
+    failing_scores = [score for score, result in student_scores if not result]
+
+    min_passing_score = min(passing_scores) if passing_scores else 100
+    max_failing_score = max(failing_scores) if failing_scores else 50
+
+    is_consistent = min_passing_score > max_failing_score
+    threshold_range = (max_failing_score, min_passing_score)
+
+    return is_consistent, threshold_range
+
+def main():
+    print("=== Аналіз оцінювання професора Грубла ===")
+
+    num_students = get_valid_input('Введіть кількість студентів -> ')
+
+    student_scores = generate_student_scores(num_students)
+
+    print_student_results(student_scores)
+
+    is_consistent, (lower_threshold, upper_threshold) = check_professor_consistency(student_scores)
+
+    print("\nРезультат аналізу:")
+    if is_consistent:
+        print("Професор Грубл був послідовним у своєму оцінюванні.")
+        print(f"Поріг складання іспиту знаходиться в діапазоні: {lower_threshold} - {upper_threshold} балів")
+    else:
+        print("Професор Грубл був непослідовним у своєму оцінюванні!")
+        print("Знайдено суперечності в оцінюванні:")
+        print(f"- Мінімальний прохідний бал: {upper_threshold}")
+        print(f"- Максимальний непрохідний бал: {lower_threshold}")
+
+if __name__ == "__main__":
+    main()
