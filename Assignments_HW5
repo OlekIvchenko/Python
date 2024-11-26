@@ -1,0 +1,81 @@
+import requests
+import certifi
+from itertools import combinations
+from collections import defaultdict
+
+def fetch_data_from_url(url):
+    try:
+        response = requests.get(url, verify=certifi.where())
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as e:
+        print(f'Failed to retrieve data from URL: {e}')
+        return None
+
+def load_orders(content):
+    orders = []
+    for order_text in content.split('\n\n'):
+        order_text = order_text.strip()
+        if order_text:
+            products = [product.strip() for product in order_text.split('@@@')]
+            if products:
+                orders.append(products)
+    return orders
+
+def count_products_and_pairs(orders):
+    product_counts = defaultdict(int)
+    pair_counts = defaultdict(int)
+
+    for order in orders:
+        for product in order:
+            if product:
+                product_counts[product] += 1
+
+        valid_products = sorted(set(p for p in order if p))
+        for prod1, prod2 in combinations(valid_products, 2):
+            pair_counts[(prod1, prod2)] += 1
+
+    return product_counts, pair_counts
+
+def find_associations(product_counts, pair_counts, min_support=15, min_confidence=45):
+    associations = []
+
+    for (prod1, prod2), support in pair_counts.items():
+        if support >= min_support:
+            conf1 = (support / product_counts[prod1]) * 100
+            conf2 = (support / product_counts[prod2]) * 100
+
+            if conf1 >= min_confidence:
+                associations.append((prod1, prod2, conf1, support))
+            if conf2 >= min_confidence:
+                associations.append((prod2, prod1, conf2, support))
+
+    return sorted(associations, key=lambda x: (-x[2], -x[3], x[0], x[1]))
+
+def main():
+    url = 'https://drive.google.com/uc?id=1Mur4UbLZsjbhpitXxI_c7SYCbeDBeReQ'
+
+    content = fetch_data_from_url(url)
+    if not content:
+        print("Failed to load data")
+        return
+
+    orders = load_orders(content)
+
+    print(f"Length of list = {len(orders)}")
+
+    product_counts, pair_counts = count_products_and_pairs(orders)
+
+    print(f"Number of unique products = {len(product_counts)}")
+    print(f"Found {len(pair_counts)} product pairs from {len(orders)} orders\n")
+
+    min_support = 15
+    min_confidence = 45
+    associations = find_associations(product_counts, pair_counts, min_support, min_confidence)
+
+    print(f"\nProduct associations (minimum support: {min_support}, minimum confidence: {min_confidence}%):")
+    for prod1, prod2, conf, support in associations:
+        print(f"{prod1} => {prod2} ({conf:.2f}% confidence), {support} support")
+
+if __name__ == "__main__":
+    main()
