@@ -1,0 +1,59 @@
+import pandas as pd
+import requests
+import os
+
+def load_movie_data(url):
+    if not os.path.exists('movies.csv'):
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open('movies.csv', 'wb') as f:
+                f.write(response.content)
+    df = pd.read_csv('movies.csv')
+    return df.drop_duplicates()
+
+url = "https://gist.githubusercontent.com/tiangechen/b68782efa49a16edaf07dc2cdaa855ea/raw/0c794a9717f18b094eabab2cd6a6b9a226903577/movies.csv"
+movies_df = load_movie_data(url)
+
+print("Стовпці набору даних:")
+print(movies_df.columns)
+print("\nТипи даних:")
+print(movies_df.dtypes)
+print("\nСтатистика набору даних:")
+print(movies_df.describe())
+
+total_movies = len(movies_df['Film'].unique())
+print(f"\nЗагальна кількість фільмів: {total_movies}")
+
+movies_by_year = movies_df['Year'].value_counts().sort_index()
+print("\nКількість фільмів за роками:")
+print(movies_by_year)
+
+most_profitable = movies_df.loc[movies_df['Profitability'].idxmax()]
+least_profitable = movies_df.loc[movies_df['Profitability'].idxmin()]
+
+print("\nНайприбутковіший фільм:")
+print(most_profitable)
+print("\nНайменш прибутковий фільм:")
+print(least_profitable)
+
+print("\nУнікальні жанри до виправлення:")
+print(movies_df['Genre'].unique())
+
+genre_corrections = {
+    'Sci-Fi': 'Science Fiction',
+    'sci-fi': 'Science Fiction',
+    'Romance': 'Romantic',
+    'romance': 'Romantic'
+}
+
+movies_df['Genre'] = movies_df['Genre'].replace(genre_corrections)
+
+print("\nУнікальні жанри після виправлення:")
+print(movies_df['Genre'].unique())
+
+top_comedies = movies_df[movies_df['Genre'] == 'Comedy'].nlargest(10, 'Audience score %')[
+    ['Film', 'Year', 'Lead Studio']]
+print("\nТоп-10 комедій:")
+print(top_comedies)
+
+top_comedies.to_csv('top_comedies.csv', index=False)
